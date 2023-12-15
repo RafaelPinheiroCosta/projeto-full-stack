@@ -13,12 +13,15 @@ import {
 
 import { useFirebaseObjetosController } from './FirebaseObjetosController';
 import FormularioObjetos from '../../componentes/FormularioObjetos';
+import TextFieldPesquisa from '../../componentes/TextFieldPesquisa';
 
 function FirebaseObjetos() {
   const {
     objetos,
     objetoSelecionado,
     objeto,
+    setObjetos,
+    fetchData,
     handleSubmit,
     handleInputChange,
     handleDelete,
@@ -49,11 +52,21 @@ function FirebaseObjetos() {
           margin: 'auto',
         }}
       >
-        <FormularioObjetos        
+        <FormularioObjetos
           dadosDoFormulario={objeto}
           handleInputChange={handleInputChange}
           objetoSelecionado={objetoSelecionado}
           handleSubmit={handleSubmit}
+        />
+
+        <TextFieldPesquisa
+          label={"Pesquise seu objeto Aqui"}
+          onChange={evento => {
+            const textoDigitado = evento.target.value;
+            const resultadoBusca = objetos.filter(objeto => objeto.nome.includes(textoDigitado))
+            setObjetos(resultadoBusca)
+          }}
+          onBlur={fetchData}
         />
       </Box>
 

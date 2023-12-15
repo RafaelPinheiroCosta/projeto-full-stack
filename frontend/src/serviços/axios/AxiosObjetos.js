@@ -17,8 +17,8 @@ import useAxiosObjetosController from '../axios/AxiosObjetosController';
 function AxiosObjetos() {
     const {
         objetos,
-        setObjetosEncontrados,
-        objetosEncontrados,
+        setObjetos,
+        fetchObjetos,
         objetoSelecionado,
         objeto,
         handleDelete,
@@ -64,13 +64,14 @@ function AxiosObjetos() {
                     onChange={evento => {
                         const textoDigitado = evento.target.value;
                         const resultadoBusca = objetos.filter(objeto => objeto.nome.includes(textoDigitado))
-                        setObjetosEncontrados(resultadoBusca)
+                        setObjetos(resultadoBusca)
                     }}
+                    onBlur={fetchObjetos}                    
                 />
 
             </Box>
 
-            {objetosEncontrados.length > 0 && (
+            {objetos.length > 0 && (
                 <Grid
                     container
                     spacing={2}
@@ -78,7 +79,7 @@ function AxiosObjetos() {
                         marginTop: '20px',
                     }}
                 >
-                    {objetosEncontrados.map((objeto) => (
+                    {objetos.map((objeto) => (
                         <Grid item key={objeto.id} xs={12} sm={6} md={4} lg={3}>
                             <Grow
                                 in={true}

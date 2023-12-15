@@ -78,6 +78,8 @@ export function useFirebaseObjetosController() {
     objetos,
     objetoSelecionado,
     objeto,
+    setObjetos,
+    fetchData,
     handleSubmit,
     handleInputChange,
     handleDelete,

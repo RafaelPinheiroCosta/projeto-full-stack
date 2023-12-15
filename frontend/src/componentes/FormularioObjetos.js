@@ -16,6 +16,8 @@ function FormularioObjetos({ dadosDoFormulario, handleInputChange, objetoSelecio
           gap: '16px',
           margin: 'auto',
           backgroundColor: '#f0f0f0',
+          padding: '30px',
+          borderRadius: '10px'
         }}
       >
         <Typography variant="h3" component="div" align="center">

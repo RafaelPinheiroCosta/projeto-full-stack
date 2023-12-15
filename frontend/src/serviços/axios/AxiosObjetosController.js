@@ -67,6 +67,8 @@ const useAxiosObjetosController = () => {
 
   return {
     objetos,
+    setObjetos,
+    fetchObjetos,
     setObjetosEncontrados,
     objetosEncontrados,
     objetoSelecionado,

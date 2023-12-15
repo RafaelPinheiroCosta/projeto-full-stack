@@ -5,93 +5,43 @@ import {
   Typography,
   TextField,
   IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText
 } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import FirebaseObjetos from './serviços/firebase/FirebaseObjetos';
-import AxiosObjetos from './serviços/axios/AxiosObjetos';
+import GavetaLateralFixa from './componentes/GavetaLateral';
+// import AxiosObjetos from './serviços/axios/AxiosObjetos';
 
 function App() {
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  setDrawerOpen(open);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
 
-  const handleSearch = () => {
-    // Implemente a lógica de pesquisa aqui com o valor em 'searchTerm'
-    console.log(`Pesquisando por: ${searchTerm}`);
-  };
+const scrollToSection = (section) => {
+  const element = document.getElementById(section);
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return;
-    }
+  if (element) {
+    const offsetTop = element.offsetTop - 100;
 
-    setDrawerOpen(open);
-  };
+    window.scrollTo({
+      top: offsetTop,
+      behavior: 'smooth',
+    });
 
-  const scrollToSection = (section) => {
-    const element = document.getElementById(section);
+    setDrawerOpen(false);
+  }
+};
 
-    if (element) {
-      const offsetTop = element.offsetTop - 100;
+const handleDrawerOpen = () => {
+  setDrawerOpen(true);
+};
 
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth',
-      });
+return (
+  <div>
+    <GavetaLateralFixa />
 
-      setDrawerOpen(false);
-    }
-  };
-
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true);
-  };
-
-  return (
-    <div>
-      <AppBar position="fixed">
-        <Toolbar
-          sx={{
-            height: '100px',
-            zIndex: (theme) => theme.zIndex.drawer + 10000
-          }}
-        >
-          <IconButton color="inherit" onClick={handleDrawerOpen}>
-            <MenuIcon />
-          </IconButton>
-
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Seu App de Objetos
-          </Typography>
-
-          <TextField
-            label="Pesquisar"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <SearchIcon onClick={handleSearch} style={{ cursor: 'pointer' }} />
-              ),
-            }}
-          />
-        </Toolbar>
-      </AppBar>
-
-      <Drawer
+    {/* <Drawer
         anchor="left"
         open={drawerOpen}
         variant="persistent"
@@ -110,20 +60,22 @@ function App() {
             <ListItemText primary="Seção 2 " />
           </ListItem>
         </List>
-      </Drawer>
+      </Drawer> */}
 
-      <div style={{ height: '100px' }} />  {/* desconta a altura da TopAppBAr */}
-
+    <div style={{ height: '100px' }} />  {/* desconta a altura da TopAppBAr */}
+    {/* 
       <AxiosObjetos
         id="secao1"
         key="secao1"
-      />
+      /> */}
 
-      <FirebaseObjetos
-        id="secao2"
-        key="secao2"
-      />
-    </div>
-  );
-}
-export default App;
+    <FirebaseObjetos
+      id="secao1"
+      key="secao1"
+    />
+
+  </div>
+
+
+);
+}export default App;
