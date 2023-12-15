@@ -1,144 +1,129 @@
-import { deleteObjeto, getObjetos, postObjeto, patchObjeto } from './serviços/objetos';
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import { useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  TextField,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText
+} from '@mui/material';
+
+import SearchIcon from '@mui/icons-material/Search';
+import MenuIcon from '@mui/icons-material/Menu';
+import FirebaseObjetos from './serviços/firebase/FirebaseObjetos';
+import AxiosObjetos from './serviços/axios/AxiosObjetos';
 
 function App() {
- 
-  const [dadosDoFormulario, setdadosDoFormulario] = useState({
-    id: '',
-    nome: '',
-    tipo: '',
-    tamanho: '',
-  });
 
-  const [objetos, setObjetos] = useState([])
+  const [searchTerm, setSearchTerm] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  useEffect(() => {
-    fetchObjetos()
-  }, [])
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
-  async function fetchObjetos() {
-    const objetosDaAPI = await getObjetos()
-    setObjetos(objetosDaAPI)
-  }
+  const handleSearch = () => {
+    // Implemente a lógica de pesquisa aqui com o valor em 'searchTerm'
+    console.log(`Pesquisando por: ${searchTerm}`);
+  };
 
-  async function deletaObjeto(id) {
-    await deleteObjeto(id)
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
 
-    alert(`Você deletou o livro de id: ${id}`)
-    await fetchObjetos()
+    setDrawerOpen(open);
+  };
 
-  }
+  const scrollToSection = (section) => {
+    const element = document.getElementById(section);
 
-  async function editaDados(id) {
+    if (element) {
+      const offsetTop = element.offsetTop - 100;
 
-    await patchObjeto(id, dadosDoFormulario);
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth',
+      });
 
-    await fetchObjetos();
-  }
+      setDrawerOpen(false);
+    }
+  };
 
-  async function submeteFormulario(event) {
-    event.preventDefault();
-
-    await postObjeto(dadosDoFormulario);
-
-    await fetchObjetos();
-  }
-
-  function handleInputChange(event) {
-    setdadosDoFormulario({
-      ...dadosDoFormulario, [event.target.name]: event.target.value,
-    });
-  }
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
 
   return (
-    <Container
-      sx={{
-        flexDirection: 'column',
-        marginTop: '16px',
-        backgroundColor: '#f0f0f0',
-        padding: '16px',
-        borderRadius: '8px',
-      }}
-    >
-      <Box
-        component="form"
-        onSubmit={submeteFormulario}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '80%',
-          gap: '16px',
-          backgroundColor: '#f0f0f0', // Cinza claro
-        }}
+    <div>
+      <AppBar position="fixed">
+        <Toolbar
+          sx={{
+            height: '100px',
+            zIndex: (theme) => theme.zIndex.drawer + 10000
+          }}
+        >
+          <IconButton color="inherit" onClick={handleDrawerOpen}>
+            <MenuIcon />
+          </IconButton>
+
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Seu App de Objetos
+          </Typography>
+
+          <TextField
+            label="Pesquisar"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            variant="outlined"
+            InputProps={{
+              endAdornment: (
+                <SearchIcon onClick={handleSearch} style={{ cursor: 'pointer' }} />
+              ),
+            }}
+          />
+        </Toolbar>
+      </AppBar>
+
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        variant="persistent"
+        onClose={toggleDrawer}
       >
-        <TextField
-          label="ID"
-          name="id"
-          value={dadosDoFormulario.id}
-          onChange={handleInputChange}
-          variant="outlined"
-        />
-        <TextField
-          label="Nome"
-          name="nome"
-          value={dadosDoFormulario.nome}
-          onChange={handleInputChange}
-          variant="outlined"
-        />
-        <TextField
-          label="Tipo"
-          name="tipo"
-          value={dadosDoFormulario.tipo}
-          onChange={handleInputChange}
-          variant="outlined"
-        />
-        <TextField
-          label="Tamanho"
-          name="tamanho"
-          value={dadosDoFormulario.tamanho}
-          onChange={handleInputChange}
-          variant="outlined"
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Enviar
-        </Button>
+        <List
+          sx={{
+            width: '600px',
+            flexShrink: 0
+          }}
+        >
+          <ListItem button onClick={() => scrollToSection('secao1')}>
+            <ListItemText primary="Seção 1" />
+          </ListItem>
+          <ListItem button onClick={() => scrollToSection('secao2')}>
+            <ListItemText primary="Seção 2 " />
+          </ListItem>
+        </List>
+      </Drawer>
 
-      </Box>
+      <div style={{ height: '100px' }} />  {/* desconta a altura da TopAppBAr */}
 
-      {objetos.map(objeto => (
-        <Card key={objeto.id} sx={{ marginTop: '16px', backgroundColor: '#c0c0c0' /* Cinza mais escuro */ }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {objeto.nome}
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-              ID: {objeto.id}
-            </Typography>
-            <Typography variant="subtitle2" color="text.secondary">
-              Tipo: {objeto.tipo}
-            </Typography>
-            <Typography variant="subtitle2" color="text.secondary">
-              Tamanho: {objeto.tamanho}
-            </Typography>
-            <Button onClick={() => deletaObjeto(objeto.id)} variant="contained" color="secondary">
-              Apagar
-            </Button>
+      <AxiosObjetos
+        id="secao1"
+        key="secao1"
+      />
 
-            <Button onClick={() => editaDados(objeto.id)} variant="contained" color="primary">
-              Editar
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
-    </Container>
+      <FirebaseObjetos
+        id="secao2"
+        key="secao2"
+      />
+    </div>
   );
 }
-
 export default App;

@@ -4,13 +4,11 @@ const objetosAPI = axios.create({ baseURL: "http://localhost:3001/objetos" })
 
 async function getObjetos() {
     const response = await objetosAPI.get('/')
-
     return response.data
 }
 
 async function getObjeto(id) {
     const response = await objetosAPI.get(`/${id}`)
-
     return response.data
 }
 
@@ -24,7 +22,6 @@ async function postObjeto(objeto) {
     )
 }
 
-
 async function patchObjeto(id, objeto) {
     await objetosAPI.patch(`/${id}`, JSON.stringify(objeto),
         {
@@ -34,7 +31,6 @@ async function patchObjeto(id, objeto) {
         }
     )
 }
-
 
 async function deleteObjeto(id) {
     await objetosAPI.delete(`/${id}`)
